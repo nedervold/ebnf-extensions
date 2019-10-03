@@ -1,4 +1,5 @@
 -- | Datatypes for extensions to BNF.
+{-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -9,10 +10,11 @@
 module Language.Ebnf.Extensions.Syntax where
 
 import Control.Lens.TH (makeClassy)
-import Data.Bifoldable
-import Data.Bifunctor
-import Data.Bitraversable
-import Data.List.NonEmpty
+import Data.Bifoldable (Bifoldable(bifoldMap))
+import Data.Bifunctor (Bifunctor(bimap))
+import Data.Bitraversable (Bitraversable(bitraverse))
+import Data.Data (Data, Typeable)
+import qualified Data.List.NonEmpty
 import Data.Ord (comparing)
 import GHC.Generics (Generic)
 
@@ -32,7 +34,7 @@ type Rep1 = Data.List.NonEmpty.NonEmpty
 data Repsep0 s b
   = Repsep0Nothing -- ^ an empty list
   | Repsep0Just { _repsep0Contents :: Repsep1 s b} -- ^ a non-empty  list
-  deriving (Eq, Functor, Generic, Ord, Show)
+  deriving (Eq, Data, Functor, Generic, Ord, Show, Typeable)
 
 instance Foldable (Repsep0 s) where
   foldMap = bifoldMap (const mempty)
@@ -60,7 +62,7 @@ data Repsep1 s b
                ,  _repsep1Separator :: s
                ,  _repsep1Tail :: Repsep1 s b -- ^ a list with multiple elements
                 }
-  deriving (Eq, Functor, Generic, Show)
+  deriving (Eq, Data, Functor, Generic, Show, Typeable)
 
 instance (Ord b, Ord s) =>
          Ord (Repsep1 s b) where

@@ -8,7 +8,7 @@ module Language.Ebnf.Extensions.Generators
   ) where
 
 import Control.Monad (replicateM)
-import Hedgehog
+import Hedgehog (MonadGen, Range)
 import Hedgehog.Gen (list, maybe, nonEmpty)
 import Language.Ebnf.Extensions.Syntax
        (Opt, Rep0, Rep1, Repsep0(..), Repsep1(..))
