@@ -1,7 +1,12 @@
 {-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module Language.Ebnf.Extensions.Syntax where
 
+import Control.Lens.TH(makeClassy)
 import Data.Bifoldable
 import Data.Bifunctor
 import Data.Bitraversable
@@ -19,7 +24,7 @@ type Rep1 = Data.List.NonEmpty.NonEmpty
 ------------------------------------------------------------
 data Repsep0 s b
   = Repsep0Nothing
-  | Repsep0Just (Repsep1 s b)
+  | Repsep0Just { _repsep0Contents :: Repsep1 s b }
   deriving (Eq, Functor, Ord, Show)
 
 instance Foldable (Repsep0 s) where
@@ -42,10 +47,10 @@ instance Bitraversable Repsep0 where
 
 ------------------------------------------------------------
 data Repsep1 s b
-  = Repsep1Singleton b
-  | Repsep1Cons b
-                s
-                (Repsep1 s b)
+  = Repsep1Singleton { _repsep1Body :: b}
+  | Repsep1Cons { _repsep1Body :: b
+               ,  _repsep1Separator :: s
+               ,  _repsep1Tail :: Repsep1 s b}
   deriving (Eq, Functor, Show)
 
 instance (Ord b, Ord s) =>
@@ -69,10 +74,14 @@ instance Bifunctor Repsep1 where
 
 instance Bifoldable Repsep1 where
   bifoldMap _f g (Repsep1Singleton b) = g b
-  bifoldMap f g (Repsep1Cons b s rs1) =
-    mconcat [g b, f s, bifoldMap f g rs1]
+  bifoldMap f g (Repsep1Cons b s rs1) = mconcat [g b, f s, bifoldMap f g rs1]
 
 instance Bitraversable Repsep1 where
   bitraverse _f g (Repsep1Singleton b) = Repsep1Singleton <$> g b
   bitraverse f g (Repsep1Cons b s rs1) =
     Repsep1Cons <$> g b <*> f s <*> bitraverse f g rs1
+
+------------------------------------------------------------
+
+makeClassy ''Repsep0
+makeClassy ''Repsep1
