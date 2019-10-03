@@ -1,3 +1,4 @@
+-- | Datatypes for extensions to BNF.
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleInstances #-}
@@ -15,18 +16,22 @@ import Data.List.NonEmpty
 import Data.Ord (comparing)
 import GHC.Generics (Generic)
 
+-- | A synonym for 'Maybe'.
 type Opt = Maybe
 
 ------------------------------------------------------------
+-- | A synonym for lists.
 type Rep0 = []
 
 ------------------------------------------------------------
+-- | A synonym for non-empty lists.
 type Rep1 = Data.List.NonEmpty.NonEmpty
 
 ------------------------------------------------------------
+-- | A possibly empty list of elements with separators.
 data Repsep0 s b
-  = Repsep0Nothing
-  | Repsep0Just { _repsep0Contents :: Repsep1 s b}
+  = Repsep0Nothing -- ^ an empty list
+  | Repsep0Just { _repsep0Contents :: Repsep1 s b} -- ^ a non-empty  list
   deriving (Eq, Functor, Generic, Ord, Show)
 
 instance Foldable (Repsep0 s) where
@@ -48,11 +53,13 @@ instance Bitraversable Repsep0 where
   bitraverse f g (Repsep0Just rs1) = Repsep0Just <$> bitraverse f g rs1
 
 ------------------------------------------------------------
+-- | A non-empty  list of elements with separators.
 data Repsep1 s b
-  = Repsep1Singleton { _repsep1Body :: b}
+  = Repsep1Singleton { _repsep1Body :: b} -- ^ a singleton list
   | Repsep1Cons { _repsep1Body :: b
                ,  _repsep1Separator :: s
-               ,  _repsep1Tail :: Repsep1 s b}
+               ,  _repsep1Tail :: Repsep1 s b -- ^ a list with multiple elements
+                }
   deriving (Eq, Functor, Generic, Show)
 
 instance (Ord b, Ord s) =>
