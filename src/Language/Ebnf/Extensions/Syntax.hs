@@ -66,7 +66,8 @@ instance (Ord b, Ord s) =>
 
 instance Bifoldable Repsep1 where
   bifoldMap _f g (Repsep1Singleton b) = g b
-  bifoldMap f g (Repsep1Cons b s rs1) = mconcat [g b, f s, bifoldMap f g rs1]
+  bifoldMap f g (Repsep1Cons b s rs1) =
+    mconcat [g b, f s, bifoldMap f g rs1]
 
 instance Bitraversable Repsep1 where
   bitraverse _f g (Repsep1Singleton b) = Repsep1Singleton <$> g b

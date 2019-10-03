@@ -2,14 +2,15 @@ module Language.Ebnf.Extensions.Spec
   ( spec_extensions
   ) where
 
-import Hedgehog
-
+{-
 -- prop_: QuickCheck properties.
 -- scprop_: SmallCheck properties.
 -- hprop_: Hedgehog properties.
 -- unit_: HUnit test cases.
 -- spec_: Hspec specifications.
 -- test_: Tasty TestTrees.
+-}
+import Hedgehog
 import Hedgehog.Classes
 import Hedgehog.Gen
 import Hedgehog.Range
