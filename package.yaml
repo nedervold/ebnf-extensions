@@ -24,6 +24,7 @@ ghc-options: -Wall -Wcompat
 dependencies:
 - base >= 4.7 && < 5
 - hedgehog == 1.0.1
+- parser-combinators == 1.1.0
 
 library:
   source-dirs: src
