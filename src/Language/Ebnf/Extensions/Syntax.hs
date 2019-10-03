@@ -10,10 +10,13 @@ import Data.Ord (comparing)
 
 type Opt = Maybe
 
+------------------------------------------------------------
 type Rep0 = []
 
+------------------------------------------------------------
 type Rep1 = Data.List.NonEmpty.NonEmpty
 
+------------------------------------------------------------
 data Repsep0 s b
   = Repsep0Nothing
   | Repsep0Just (Repsep1 s b)
@@ -45,6 +48,15 @@ data Repsep1 s b
                 (Repsep1 s b)
   deriving (Eq, Functor, Show)
 
+instance (Ord b, Ord s) =>
+         Ord (Repsep1 s b) where
+  compare = comparing f
+    where
+      f :: Repsep1 s b -> (b, Maybe (s, Repsep1 s b))
+      f (Repsep1Singleton b) = (b, Nothing)
+      f (Repsep1Cons b s rs1) = (b, Just (s, rs1))
+
+-- The automatic derivation wouldn't be quite right.
 instance Foldable (Repsep1 s) where
   foldMap = bifoldMap (const mempty)
 
@@ -54,15 +66,6 @@ instance Traversable (Repsep1 s) where
 instance Bifunctor Repsep1 where
   bimap _f g (Repsep1Singleton b) = Repsep1Singleton $ g b
   bimap f g (Repsep1Cons b s rs1) = Repsep1Cons (g b) (f s) (bimap f g rs1)
-
--- The automatic derivation wouldn't quite be right.
-instance (Ord b, Ord s) =>
-         Ord (Repsep1 s b) where
-  compare = comparing f
-    where
-      f :: Repsep1 s b -> (b, Maybe (s, Repsep1 s b))
-      f (Repsep1Singleton b) = (b, Nothing)
-      f (Repsep1Cons b s rs1) = (b, Just (s, rs1))
 
 instance Bifoldable Repsep1 where
   bifoldMap _f g (Repsep1Singleton b) = g b

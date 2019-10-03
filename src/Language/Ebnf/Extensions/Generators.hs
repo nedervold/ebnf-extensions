@@ -51,4 +51,4 @@ genRepsep1 rng gs gb = do
 mkRepsep1 :: [b] -> [s] -> Repsep1 s b
 mkRepsep1 [b] [] = Repsep1Singleton b
 mkRepsep1 (b:bs) (s:ss) = Repsep1Cons b s (mkRepsep1 bs ss)
-mkRepsep1 bs ss = error "mkRepsep1"
+mkRepsep1 _bs _ss = error "mkRepsep1: body-separator mismatch"
