@@ -41,6 +41,8 @@ tests:
     - ebnf-extensions
     - hedgehog-classes == 0.2.4
     - hspec == 2.7.1
+    - hspec-megaparsec == 2.0.1
+    - megaparsec == 7.0.5
     - tasty == 1.2.3
     - tasty-discover == 4.2.1
     - tasty-hspec == 1.1.5.1
