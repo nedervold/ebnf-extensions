@@ -1,23 +1,22 @@
 name:                ebnf-extensions
 version:             0.1.0.0
-github:              "githubuser/ebnf-extensions"
+github:              "nedervold/ebnf-extensions"
 license:             BSD3
-author:              "Author name here"
-maintainer:          "example@example.com"
-copyright:           "2019 Author name here"
+author:              "Eric Nedervold"
+maintainer:          "nedervoldsoftware@gmail.com"
+copyright:           "2019 Eric Nedervold"
 
 extra-source-files:
 - README.md
 - ChangeLog.md
 
-# Metadata used when publishing your package
-# synopsis:            Short description of your package
-# category:            Web
+synopsis:            Simple extensions to BNF with generators and parsers.
+category:            Language
 
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/githubuser/ebnf-extensions#readme>
+description:         Please see the README on GitHub at <https://github.com/nedervold/ebnf-extensions#readme>
 
 ghc-options: -Wall -Wcompat
 
