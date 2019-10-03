@@ -1,0 +1,5 @@
+.stack-work/
+ebnf-extensions.cabal
+stack.yaml.lock
+*~
+\#*
