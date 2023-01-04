@@ -3,3 +3,4 @@ ebnf-extensions.cabal
 stack.yaml.lock
 *~
 \#*
+.DS_Store

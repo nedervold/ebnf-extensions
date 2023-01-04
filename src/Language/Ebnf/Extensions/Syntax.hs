@@ -4,12 +4,25 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE FunctionalDependencies #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Language.Ebnf.Extensions.Syntax where
+module Language.Ebnf.Extensions.Syntax
+    -- * Opt
+  ( Opt
+    -- * Rep0
+  , Rep0
+    -- * Rep1
+  , Rep1
+  -- * Repsep0
+  , Repsep0(..)
+  , repsep0Contents
+  -- * Repsep1
+  , Repsep1(..)
+  , repsep1Body
+  , repsep1Separator
+  , repsep1Tail
+  ) where
 
-import Control.Lens.TH (makeClassy)
 import Data.Bifoldable (Bifoldable(bifoldMap))
 import Data.Bifunctor (Bifunctor(bimap))
 import Data.Bitraversable (Bitraversable(bitraverse))
@@ -17,6 +30,7 @@ import Data.Data (Data, Typeable)
 import qualified Data.List.NonEmpty
 import Data.Ord (comparing)
 import GHC.Generics (Generic)
+import Lens.Micro.TH (makeLenses)
 
 -- | A synonym for 'Maybe'.
 type Opt = Maybe
@@ -33,7 +47,9 @@ type Rep1 = Data.List.NonEmpty.NonEmpty
 -- | A possibly empty list of elements with separators.
 data Repsep0 s b
   = Repsep0Nothing -- ^ an empty list
-  | Repsep0Just { _repsep0Contents :: Repsep1 s b} -- ^ a non-empty  list
+  | Repsep0Just
+      { _repsep0Contents :: Repsep1 s b
+      } -- ^ a non-empty  list
   deriving (Eq, Data, Functor, Generic, Ord, Show, Typeable)
 
 instance Foldable (Repsep0 s) where
@@ -57,15 +73,17 @@ instance Bitraversable Repsep0 where
 ------------------------------------------------------------
 -- | A non-empty  list of elements with separators.
 data Repsep1 s b
-  = Repsep1Singleton { _repsep1Body :: b} -- ^ a singleton list
-  | Repsep1Cons { _repsep1Body :: b
-               ,  _repsep1Separator :: s
-               ,  _repsep1Tail :: Repsep1 s b -- ^ a list with multiple elements
-                }
+  = Repsep1Singleton
+      { _repsep1Body :: b -- ^ the first element
+      } -- ^ a singleton list
+  | Repsep1Cons
+      { _repsep1Body :: b -- ^ the first element
+      , _repsep1Separator :: s -- ^ the first separator
+      , _repsep1Tail :: Repsep1 s b -- ^ the rest of the list
+      }
   deriving (Eq, Data, Functor, Generic, Show, Typeable)
 
-instance (Ord b, Ord s) =>
-         Ord (Repsep1 s b) where
+instance (Ord b, Ord s) => Ord (Repsep1 s b) where
   compare = comparing f
     where
       f :: Repsep1 s b -> (b, Maybe (s, Repsep1 s b))
@@ -94,6 +112,6 @@ instance Bitraversable Repsep1 where
     Repsep1Cons <$> g b <*> f s <*> bitraverse f g rs1
 
 ------------------------------------------------------------
-makeClassy ''Repsep0
+makeLenses ''Repsep0
 
-makeClassy ''Repsep1
+makeLenses ''Repsep1

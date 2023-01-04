@@ -13,17 +13,24 @@ module Language.Ebnf.Extensions.Spec
 import Data.Void (Void)
 import Hedgehog (Gen, Range)
 import Hedgehog.Classes
-       (bifoldableFunctorLaws, bifoldableLaws, bifunctorLaws,
-        bitraversableLaws, foldableLaws, functorLaws, lawsCheckMany,
-        ordLaws, traversableLaws)
+  ( bifoldableFunctorLaws
+  , bifoldableLaws
+  , bifunctorLaws
+  , bitraversableLaws
+  , eqLaws
+  , foldableLaws
+  , functorLaws
+  , lawsCheckMany
+  , ordLaws
+  , traversableLaws
+  )
 import Hedgehog.Gen (alpha, alphaNum, list)
 import Hedgehog.Range (linear)
 import Language.Ebnf.Extensions.Generators (genRepsep0, genRepsep1)
-import Language.Ebnf.Extensions.Parsers
-       (parseRepsep0, parseRepsep1)
+import Language.Ebnf.Extensions.Parsers (parseRepsep0, parseRepsep1)
 import Language.Ebnf.Extensions.Syntax (Repsep0(..), Repsep1(..))
+import Test.Hspec (Spec, describe, it, shouldBe)
 import Test.Hspec.Megaparsec (shouldFailOn, shouldParse)
-import Test.Tasty.Hspec (Spec, describe, it, shouldBe)
 import Text.Megaparsec (Parsec, parse)
 import Text.Megaparsec.Char (char)
 
@@ -35,7 +42,9 @@ spec_extensions = do
       passed <-
         lawsCheckMany
           [ ( "Repsep0"
-            , [ foldableLaws $ genRepsep0 rng genComma
+            , [ eqLaws $ genRepsep0 rng genComma (genIdent rng)
+              , ordLaws $ genRepsep0 rng genComma (genIdent rng)
+              , foldableLaws $ genRepsep0 rng genComma
               , functorLaws $ genRepsep0 rng genComma
               , traversableLaws $ genRepsep0 rng genComma
               , bifoldableLaws $ genRepsep0 rng
@@ -44,7 +53,8 @@ spec_extensions = do
               , bitraversableLaws $ genRepsep0 rng
               ])
           , ( "Repsep1"
-            , [ ordLaws $ genRepsep1 rng genComma (genIdent rng)
+            , [ eqLaws $ genRepsep1 rng genComma (genIdent rng)
+              , ordLaws $ genRepsep1 rng genComma (genIdent rng)
               , foldableLaws $ genRepsep1 rng genComma
               , functorLaws $ genRepsep1 rng genComma
               , traversableLaws $ genRepsep1 rng genComma
@@ -73,7 +83,7 @@ spec_extensions = do
         Repsep0Just
           (Repsep1Cons 'x' ',' $ Repsep1Cons 'x' ',' $ Repsep1Singleton 'x')
     describe "parsing Repsep1" $ do
-      it "parses nothing" $ parse parseRs1 "<test>" `shouldFailOn` ""
+      it "doesn't parse nothing" $ parse parseRs1 "<test>" `shouldFailOn` ""
       it "parses \"x\"" $
         parse parseRs1 "<test>" "x" `shouldParse` Repsep1Singleton 'x'
       it "parses \"x,x\"" $

@@ -22,9 +22,9 @@ ghc-options: -Wall -Wcompat
 
 dependencies:
 - base >= 4.7 && < 5
-- hedgehog == 1.0.1
-- lens == 4.17.1
-- parser-combinators == 1.1.0
+- hedgehog
+- microlens-th
+- parser-combinators
 
 library:
   source-dirs: src
@@ -39,10 +39,10 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - ebnf-extensions
-    - hedgehog-classes == 0.2.4
-    - hspec == 2.7.1
-    - hspec-megaparsec == 2.0.1
-    - megaparsec == 7.0.5
-    - tasty == 1.2.3
-    - tasty-discover == 4.2.1
-    - tasty-hspec == 1.1.5.1
+    - hedgehog-classes
+    - hspec
+    - hspec-megaparsec
+    - megaparsec
+    - tasty
+    - tasty-discover
+    - tasty-hspec

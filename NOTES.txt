@@ -1,1 +1,6 @@
 Notes for ebnf-extensions.
+
+I was looking at adding lens laws, but shouldn't I assume that
+Lens.Micro.TH works and avoid testing it? Are any of the property
+tests unnecessary by the same reasoning?
+
