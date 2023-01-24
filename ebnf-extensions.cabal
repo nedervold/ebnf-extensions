@@ -1,0 +1,70 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.35.1.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 74455aab1339abe589782fd72579a0205057dde7527cf5bd07233fa3f04be763
+
+name:           ebnf-extensions
+version:        0.1.0.0
+synopsis:       Simple extensions to BNF with generators and parsers.
+description:    Please see the README on GitHub at <https://github.com/nedervold/ebnf-extensions#readme>
+category:       Language
+homepage:       https://github.com/nedervold/ebnf-extensions#readme
+bug-reports:    https://github.com/nedervold/ebnf-extensions/issues
+author:         Eric Nedervold
+maintainer:     nedervoldsoftware@gmail.com
+copyright:      2019 Eric Nedervold
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/nedervold/ebnf-extensions
+
+library
+  exposed-modules:
+      Language.Ebnf.Extensions
+      Language.Ebnf.Extensions.Generators
+      Language.Ebnf.Extensions.Parsers
+      Language.Ebnf.Extensions.Syntax
+  other-modules:
+      Paths_ebnf_extensions
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wcompat
+  build-depends:
+      base >=4.7 && <5
+    , hedgehog
+    , microlens-th
+    , parser-combinators
+  default-language: Haskell2010
+
+test-suite ext-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Language.Ebnf.Extensions.Spec
+      Paths_ebnf_extensions
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -Wcompat -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , ebnf-extensions
+    , hedgehog
+    , hedgehog-classes
+    , hspec
+    , hspec-megaparsec
+    , megaparsec
+    , microlens-th
+    , parser-combinators
+    , tasty
+    , tasty-discover
+    , tasty-hspec
+  default-language: Haskell2010
